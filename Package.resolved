@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Ashen",
+        "repositoryURL": "https://github.com/colinta/Ashen.git",
+        "state": {
+          "branch": "master",
+          "revision": "a6691673156e2d9a3ef5e43eff1547d2e53962a9",
+          "version": null
+        }
+      },
+      {
+        "package": "Termbox",
+        "repositoryURL": "https://github.com/colinta/Termbox.git",
+        "state": {
+          "branch": "c0b4baf",
+          "revision": "c0b4baf778f1213d29558b6c7028312bf99b6e6b",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
