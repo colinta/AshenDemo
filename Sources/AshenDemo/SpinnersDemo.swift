@@ -24,12 +24,12 @@ struct SpinnersDemo: Program {
 
     init() {
         self.spinners = (0..<SpinnerView.Model.availableSpinners).map { i in
-            return SpinnerView.Model(spinner: i)
+            SpinnerView.Model(spinner: i)
         }
     }
 
     func initial() -> (Model, [Command]) {
-        return (
+        (
             Model(
                 isAnimating: true,
                 foreground: .any(0),
@@ -60,7 +60,7 @@ struct SpinnersDemo: Program {
 
     func render(model: Model, in screenSize: Size) -> Component {
         let spinners = self.spinners.enumerated().map { (i, spinnerModel) -> Component in
-            return SpinnerView(
+            SpinnerView(
                 at: .middleCenter(x: 2 * i - (self.spinners.count + 1) / 2),
                 model: spinnerModel,
                 foreground: model.foreground,
@@ -83,7 +83,7 @@ struct SpinnersDemo: Program {
                 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 24,
             ].map { (numColors: AttrSize) -> Component in
                 let chars: [LabelView] = (0..<numColors).map { row in
-                    return LabelView(
+                    LabelView(
                         at: .topLeft(),
                         size: DesiredSize(width: 4, height: 1),
                         text: Text(
@@ -103,12 +103,12 @@ struct SpinnersDemo: Program {
             components: spinners + [
                 wideSpinner,
                 FlowLayout(at: .topLeft(y: 1), components: colors),
-                OnKeyPress(.enter, { return Message.quit }),
-                OnKeyPress(.space, { return Message.toggle }),
-                OnKeyPress(.up, { return Message.nextBackgroundColor }),
-                OnKeyPress(.down, { return Message.prevBackgroundColor }),
-                OnKeyPress(.right, { return Message.nextForegroundColor }),
-                OnKeyPress(.left, { return Message.prevForegroundColor }),
+                OnKeyPress(.enter, { Message.quit }),
+                OnKeyPress(.space, { Message.toggle }),
+                OnKeyPress(.up, { Message.nextBackgroundColor }),
+                OnKeyPress(.down, { Message.prevBackgroundColor }),
+                OnKeyPress(.right, { Message.nextForegroundColor }),
+                OnKeyPress(.left, { Message.prevForegroundColor }),
             ]
         )
     }

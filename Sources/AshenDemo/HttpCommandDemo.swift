@@ -23,7 +23,7 @@ struct HttpCommandDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(requestSent: false, http: nil, result: nil), [])
+        (Model(requestSent: false, http: nil, result: nil), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -35,7 +35,7 @@ struct HttpCommandDemo: Program {
                 url: URL(string: "http://www.gutenberg.org/cache/epub/1661/pg1661.txt")!
             )
             { result in
-                return Message.received(result)
+                Message.received(result)
             }
             model.http = cmd
             model.requestSent = true
@@ -61,7 +61,7 @@ struct HttpCommandDemo: Program {
 
     func render(model: Model, in screenSize: Size) -> Component {
         guard model.requestSent
-        else { return OnNext({ return Message.sendRequest }) }
+        else { return OnNext({ Message.sendRequest }) }
 
         let content: Component
         if case let .some(.ok(string)) = model.result {
@@ -79,7 +79,7 @@ struct HttpCommandDemo: Program {
 
         return Window(
             components: [
-                OnKeyPress(.enter, { return Message.quit }),
+                OnKeyPress(.enter, { Message.quit }),
             ] + [content]
         )
     }

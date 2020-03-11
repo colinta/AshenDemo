@@ -19,7 +19,7 @@ struct MouseDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(), [])
+        (Model(), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -48,7 +48,7 @@ struct MouseDemo: Program {
         let brushes = ["█", "▓", "▒", "░", " "]
         let buttonSize = Size(width: 5, height: 3)
         let brushButtons = brushes.map { brush in
-            return Button(
+            Button(
                 onClick: { Message.setBrush(brush) },
                 content: Box(
                     size: DesiredSize(buttonSize),
@@ -78,7 +78,7 @@ struct MouseDemo: Program {
                 border: .single,
                 components: [MouseCanvas(model.drawables, onMouse: Message.onMouse)]
             ),
-            OnKeyPress(.enter, { return Message.quit }),
+            OnKeyPress(.enter, { Message.quit }),
         ])
     }
 }
@@ -94,7 +94,7 @@ class MouseCanvas: ComponentView {
     }
 
     override public func desiredSize() -> DesiredSize {
-        return DesiredSize(width: .max, height: .max)
+        DesiredSize(width: .max, height: .max)
     }
 
     override public func messages(for event: Event) -> [AnyMessage] {

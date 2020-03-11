@@ -22,7 +22,7 @@ struct CanvasDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(isAnimating: false, date: Date(), timeOffset: 0), [])
+        (Model(isAnimating: false, date: Date(), timeOffset: 0), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -85,7 +85,7 @@ struct CanvasDemo: Program {
         let canvasSize = min((screenSize.width - 2) / 2, screenSize.height - 13)
         let timingComponent: Component?
         if model.isAnimating {
-            timingComponent = OnNext({ return Message.offset(3600) })
+            timingComponent = OnNext({ Message.offset(3600) })
         }
         else {
             timingComponent = nil
@@ -103,7 +103,7 @@ struct CanvasDemo: Program {
         let timeChr = timeChars[Int(totalSeconds * Float(timeChars.count) / 86400)]
 
         let sinWaveFn: (Float) -> Float = { x in
-            return 0.5 - cos((totalSeconds + x) / 86_400 * 2 * Float.pi) / 2
+            0.5 - cos((totalSeconds + x) / 86_400 * 2 * Float.pi) / 2
         }
         let sinWave = CanvasView(
             at: .bottomLeft(),
@@ -126,12 +126,12 @@ struct CanvasDemo: Program {
             ]
         )
         let components: [Component] = [
-            OnKeyPress(.up, { return Message.offset(3600) }),
-            OnKeyPress(.down, { return Message.offset(-3600) }),
-            OnKeyPress(.backspace, { return Message.offsetReset }),
-            OnKeyPress(.enter, { return Message.quit }),
-            OnKeyPress(.space, { return Message.toggleAnimation }),
-            OnTick({ _ in return Message.tick }, every: 0.1),
+            OnKeyPress(.up, { Message.offset(3600) }),
+            OnKeyPress(.down, { Message.offset(-3600) }),
+            OnKeyPress(.backspace, { Message.offsetReset }),
+            OnKeyPress(.enter, { Message.quit }),
+            OnKeyPress(.space, { Message.toggleAnimation }),
+            OnTick({ _ in Message.tick }, every: 0.1),
             LabelView(
                 at: .topLeft(x: 2),
                 text:

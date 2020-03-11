@@ -175,7 +175,7 @@ struct Demo: Program {
                 spinnerProgram
                 .render(model: model.spinnerModel, in: boxSize)
                 .map { (msg: SpinnersDemo.Message) -> Demo.Message in
-                    return Demo.Message.spinnerMessage(msg)
+                    Demo.Message.spinnerMessage(msg)
                 }
         case .canvas:
             title = "Canvas Demo"
@@ -183,7 +183,7 @@ struct Demo: Program {
                 canvasProgram
                 .render(model: model.canvasModel, in: boxSize)
                 .map { (msg: CanvasDemo.Message) -> Demo.Message in
-                    return Demo.Message.canvasMessage(msg)
+                    Demo.Message.canvasMessage(msg)
                 }
         case .input:
             title = "InputView Demo"
@@ -191,7 +191,7 @@ struct Demo: Program {
                 inputProgram
                 .render(model: model.inputModel, in: boxSize)
                 .map { (msg: InputDemo.Message) -> Demo.Message in
-                    return Demo.Message.inputMessage(msg)
+                    Demo.Message.inputMessage(msg)
                 }
         case .mouse:
             title = "MouseView Demo"
@@ -199,7 +199,7 @@ struct Demo: Program {
                 mouseProgram
                 .render(model: model.mouseModel, in: boxSize)
                 .map { (msg: MouseDemo.Message) -> Demo.Message in
-                    return Demo.Message.mouseMessage(msg)
+                    Demo.Message.mouseMessage(msg)
                 }
         case .flowLayout:
             title = "FlowLayout Demo"
@@ -207,7 +207,7 @@ struct Demo: Program {
                 flowLayoutProgram
                 .render(model: model.flowLayoutModel, in: boxSize)
                 .map { (msg: FlowLayoutDemo.Message) -> Demo.Message in
-                    return Demo.Message.flowLayoutMessage(msg)
+                    Demo.Message.flowLayoutMessage(msg)
                 }
         case .gridLayout:
             title = "GridLayout Demo"
@@ -215,7 +215,7 @@ struct Demo: Program {
                 gridLayoutProgram
                 .render(model: model.gridLayoutModel, in: boxSize)
                 .map { (msg: GridLayoutDemo.Message) -> Demo.Message in
-                    return Demo.Message.gridLayoutMessage(msg)
+                    Demo.Message.gridLayoutMessage(msg)
                 }
         case .httpCommand:
             title = "HttpCommand Demo"
@@ -223,7 +223,7 @@ struct Demo: Program {
                 httpCommandProgram
                 .render(model: model.httpCommandModel, in: boxSize)
                 .map { (msg: HttpCommandDemo.Message) -> Demo.Message in
-                    return Demo.Message.httpCommandMessage(msg)
+                    Demo.Message.httpCommandMessage(msg)
                 }
         }
 
@@ -233,13 +233,13 @@ struct Demo: Program {
             components: [demo]
         )
 
-        components.append(OnMouse({ mouse in return Demo.Message.mouse(mouse) }))
+        components.append(OnMouse({ mouse in Demo.Message.mouse(mouse) }))
         components.append(demoBox)
         components.append(LabelView(at: .topCenter(y: 0), text: Text(title, [.underline, .bold])))
         components.append(
-            OnKeyPress({ key in return Demo.Message.keypress(key) }, except: [.ctrl(.k)])
+            OnKeyPress({ key in Demo.Message.keypress(key) }, except: [.ctrl(.k)])
         )
-        components.append(OnKeyPress({ _ in return Demo.Message.resetLog }, only: [.ctrl(.k)]))
+        components.append(OnKeyPress({ _ in Demo.Message.resetLog }, only: [.ctrl(.k)]))
         components.append(OnDebug(Message.appendLog))
         components.append(
             Box(

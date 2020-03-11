@@ -34,7 +34,7 @@ struct GridLayoutDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(), [])
+        (Model(), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -52,8 +52,8 @@ struct GridLayoutDemo: Program {
     func render(model: Model, in screenSize: Size) -> Component {
         let gridSize = Size(width: screenSize.width, height: screenSize.height - 1)
         return Window(components: [
-            OnKeyPress(.enter, { return Message.quit }),
-            OnKeyPress(.tab, { return Message.randomize }),
+            OnKeyPress(.enter, { Message.quit }),
+            OnKeyPress(.tab, { Message.randomize }),
             GridLayout(
                 at: .topLeft(y: 1),
                 size: gridSize,
@@ -63,7 +63,7 @@ struct GridLayoutDemo: Program {
                         .row(
                             weight: .relative(row.weight),
                             row.columns.flatMap { col -> [GridLayout.Column] in
-                                return [
+                                [
                                     .column(weight: .relative(col.weight), Box(background: col.bg)),
                                     .column(weight: .fixed(1), Box(background: "|"))
                                 ]

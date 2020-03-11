@@ -21,7 +21,7 @@ struct InputDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (
+        (
             Model(
                 activeInput: 0,
                 firstInput: "Press enter to exit, tab to switch inputs",
@@ -61,14 +61,13 @@ struct InputDemo: Program {
             text: model.firstInput,
             isFirstResponder: model.activeInput == 0,
             onChange: { text in
-                return Message.onChange(0, text)
+                Message.onChange(0, text)
             },
             onClick: {
-                debug("=============== \(#file) line \(#line) ===============")
-                return Message.focusFirst
+                Message.focusFirst
             },
             onEnter: {
-                return Message.quit
+                Message.quit
             }
         )
         let secondInput = InputView(
@@ -77,18 +76,17 @@ struct InputDemo: Program {
             isFirstResponder: model.activeInput == 1,
             isMultiline: true,
             onChange: { model in
-                return Message.onChange(1, model)
+                Message.onChange(1, model)
             },
             onClick: {
-                debug("=============== \(#file) line \(#line) ===============")
-                return Message.focusSecond
+                Message.focusSecond
             }
         )
         return Window(components: [
             firstInput,
             secondInput,
-            OnKeyPress(.tab, { return Message.nextInput }),
-            OnKeyPress(.backtab, { return Message.prevInput }),
+            OnKeyPress(.tab, { Message.nextInput }),
+            OnKeyPress(.backtab, { Message.prevInput }),
         ])
     }
 }

@@ -41,7 +41,7 @@ struct FlowLayoutDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(), [])
+        (Model(), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -58,12 +58,12 @@ struct FlowLayoutDemo: Program {
 
     func render(model: Model, in screenSize: Size) -> Component {
         let labels = model.strings.map { text in
-            return LabelView(text: text)
+            LabelView(text: text)
         }
         return Window(components: [
             LabelView(at: .topLeft(), text: "\(model.orientation)  ---  \(model.direction)"),
-            OnKeyPress(.enter, { return Message.quit }),
-            OnKeyPress(.tab, { return Message.randomize }),
+            OnKeyPress(.enter, { Message.quit }),
+            OnKeyPress(.tab, { Message.randomize }),
             FlowLayout(
                 at: .topLeft(y: 1),
                 size: DesiredSize(width: screenSize.width, height: screenSize.height - 1),
