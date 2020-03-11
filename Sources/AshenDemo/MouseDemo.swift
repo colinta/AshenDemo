@@ -48,19 +48,38 @@ struct MouseDemo: Program {
         let brushes = ["█", "▓", "▒", "░", " "]
         let buttonSize = Size(width: 5, height: 3)
         let brushButtons = brushes.map { brush in
-            return Button(onClick: { Message.setBrush(brush) }, content: Box(size: DesiredSize(buttonSize),
-                border: model.brush == brush ? .bold : .single,
-                components: [LabelView(text: String(repeating: brush, count: buttonSize.width))]))
+            return Button(
+                onClick: { Message.setBrush(brush) },
+                content: Box(
+                    size: DesiredSize(buttonSize),
+                    border: model.brush == brush ? .bold : .single,
+                    components: [LabelView(text: String(repeating: brush, count: buttonSize.width))]
+                )
+            )
         }
 
         return Window(components: [
-            FlowLayout.horizontal(size: DesiredSize(width: .max, height: buttonSize.height + 1), components: brushButtons),
-            Box(at: .topRight(x: -5, y: 1), size: DesiredSize(width: 10, height: 3), border: .single, label: "Brush", components: [
-                LabelView(text: String(repeating: model.brush, count: 8))
-                ]),
-            Box(at: .topLeft(x: 0, y: 4), size: DesiredSize(width: screenSize.width, height: screenSize.height), border: .single, components: [MouseCanvas(model.drawables, onMouse: Message.onMouse)]),
+            FlowLayout.horizontal(
+                size: DesiredSize(width: .max, height: buttonSize.height + 1),
+                components: brushButtons
+            ),
+            Box(
+                at: .topRight(x: -5, y: 1),
+                size: DesiredSize(width: 10, height: 3),
+                border: .single,
+                label: "Brush",
+                components: [
+                    LabelView(text: String(repeating: model.brush, count: 8))
+                ]
+            ),
+            Box(
+                at: .topLeft(x: 0, y: 4),
+                size: DesiredSize(width: screenSize.width, height: screenSize.height),
+                border: .single,
+                components: [MouseCanvas(model.drawables, onMouse: Message.onMouse)]
+            ),
             OnKeyPress(.enter, { return Message.quit }),
-            ])
+        ])
     }
 }
 

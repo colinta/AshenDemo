@@ -64,8 +64,13 @@ struct FlowLayoutDemo: Program {
             LabelView(at: .topLeft(), text: "\(model.orientation)  ---  \(model.direction)"),
             OnKeyPress(.enter, { return Message.quit }),
             OnKeyPress(.tab, { return Message.randomize }),
-            FlowLayout(at: .topLeft(y: 1), size: DesiredSize(width: screenSize.width, height: screenSize.height - 1), orientation: model.orientation, direction: model.direction,
-                components: labels),
-            ])
+            FlowLayout(
+                at: .topLeft(y: 1),
+                size: DesiredSize(width: screenSize.width, height: screenSize.height - 1),
+                orientation: model.orientation,
+                direction: model.direction,
+                components: labels
+            ),
+        ])
     }
 }

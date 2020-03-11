@@ -21,11 +21,13 @@ struct InputDemo: Program {
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(
-            activeInput: 0,
-            firstInput: "Press enter to exit, tab to switch inputs",
-            secondInput: ""
-            ), [])
+        return (
+            Model(
+                activeInput: 0,
+                firstInput: "Press enter to exit, tab to switch inputs",
+                secondInput: ""
+            ), []
+        )
     }
 
     func update(model: inout Model, message: Message)
@@ -63,10 +65,12 @@ struct InputDemo: Program {
             },
             onClick: {
                 debug("=============== \(#file) line \(#line) ===============")
-                return Message.focusFirst },
+                return Message.focusFirst
+            },
             onEnter: {
                 return Message.quit
-            })
+            }
+        )
         let secondInput = InputView(
             at: .topLeft(x: 1, y: 3),
             text: model.secondInput,
@@ -77,8 +81,9 @@ struct InputDemo: Program {
             },
             onClick: {
                 debug("=============== \(#file) line \(#line) ===============")
-                return Message.focusSecond }
-            )
+                return Message.focusSecond
+            }
+        )
         return Window(components: [
             firstInput,
             secondInput,

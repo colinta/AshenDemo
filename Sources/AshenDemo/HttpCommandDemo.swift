@@ -33,7 +33,7 @@ struct HttpCommandDemo: Program {
         case .sendRequest:
             let cmd = Http.get(
                 url: URL(string: "http://www.gutenberg.org/cache/epub/1661/pg1661.txt")!
-                )
+            )
             { result in
                 return Message.received(result)
             }
@@ -80,6 +80,7 @@ struct HttpCommandDemo: Program {
         return Window(
             components: [
                 OnKeyPress(.enter, { return Message.quit }),
-            ] + [content])
+            ] + [content]
+        )
     }
 }

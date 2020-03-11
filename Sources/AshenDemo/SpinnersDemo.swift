@@ -23,17 +23,19 @@ struct SpinnersDemo: Program {
     let spinners: [SpinnerView.Model]
 
     init() {
-        self.spinners = (0 ..< SpinnerView.Model.availableSpinners).map { i in
-           return SpinnerView.Model(spinner: i)
-       }
+        self.spinners = (0..<SpinnerView.Model.availableSpinners).map { i in
+            return SpinnerView.Model(spinner: i)
+        }
     }
 
     func initial() -> (Model, [Command]) {
-        return (Model(
-            isAnimating: true,
-            foreground: .any(0),
-            background: .any(0)
-            ), [])
+        return (
+            Model(
+                isAnimating: true,
+                foreground: .any(0),
+                background: .any(0)
+            ), []
+        )
     }
 
     func update(model: inout Model, message: Message)
@@ -64,15 +66,15 @@ struct SpinnersDemo: Program {
                 foreground: model.foreground,
                 background: model.background,
                 isAnimating: model.isAnimating
-                )
+            )
         }
         let wideSpinner = SpinnerView(
-                at: .middleCenter(y: 1),
-                model: SpinnerView.Model.width(20),
-                foreground: model.foreground,
-                background: model.background,
-                isAnimating: model.isAnimating
-                )
+            at: .middleCenter(y: 1),
+            model: SpinnerView.Model.width(20),
+            foreground: model.foreground,
+            background: model.background,
+            isAnimating: model.isAnimating
+        )
 
         var color: AttrSize = 0
         let colors =
@@ -80,11 +82,21 @@ struct SpinnersDemo: Program {
                 1, 16, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
                 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 24,
             ].map { (numColors: AttrSize) -> Component in
-                let chars: [LabelView] = (0 ..< numColors).map { row in
-                    return LabelView(at: .topLeft(), size: DesiredSize(width: 4, height: 1), text: Text(String(format:" %02X ", color + row), [.background(.any(color + row))]))
+                let chars: [LabelView] = (0..<numColors).map { row in
+                    return LabelView(
+                        at: .topLeft(),
+                        size: DesiredSize(width: 4, height: 1),
+                        text: Text(
+                            String(format: " %02X ", color + row),
+                            [.background(.any(color + row))]
+                        )
+                    )
                 }
                 color += numColors
-                return FlowLayout.vertical(size: DesiredSize(width: 4, height: .literal(chars.count)), components: chars)
+                return FlowLayout.vertical(
+                    size: DesiredSize(width: 4, height: .literal(chars.count)),
+                    components: chars
+                )
             }
 
         return Window(
@@ -97,7 +109,8 @@ struct SpinnersDemo: Program {
                 OnKeyPress(.down, { return Message.prevBackgroundColor }),
                 OnKeyPress(.right, { return Message.nextForegroundColor }),
                 OnKeyPress(.left, { return Message.prevForegroundColor }),
-            ])
+            ]
+        )
     }
 
     private func nextColor(_ c: Color) -> Color {

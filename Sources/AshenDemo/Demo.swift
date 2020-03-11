@@ -66,17 +66,19 @@ struct Demo: Program {
         let (gridLayoutModel, _) = gridLayoutProgram.initial()
         let (httpCommandModel, _) = httpCommandProgram.initial()
 
-        return (Model(
-            activeDemo: initialDemo,
-            spinnerModel: spinnerModel,
-            canvasModel: canvasModel,
-            inputModel: inputModel,
-            mouseModel: mouseModel,
-            flowLayoutModel: flowLayoutModel,
-            gridLayoutModel: gridLayoutModel,
-            httpCommandModel: httpCommandModel,
-            log: []
-            ), [])
+        return (
+            Model(
+                activeDemo: initialDemo,
+                spinnerModel: spinnerModel,
+                canvasModel: canvasModel,
+                inputModel: inputModel,
+                mouseModel: mouseModel,
+                flowLayoutModel: flowLayoutModel,
+                gridLayoutModel: gridLayoutModel,
+                httpCommandModel: httpCommandModel,
+                log: []
+            ), []
+        )
     }
 
     func update(model: inout Model, message: Message)
@@ -162,53 +164,63 @@ struct Demo: Program {
 
         let title: String
         let demo: Component
-        let boxSize = Size(width: screenSize.width, height: screenSize.height - logHeight - labelHeight)
+        let boxSize = Size(
+            width: screenSize.width,
+            height: screenSize.height - logHeight - labelHeight
+        )
         switch model.activeDemo {
         case .spinner:
             title = "SpinnerView Demo"
-            demo = spinnerProgram
+            demo =
+                spinnerProgram
                 .render(model: model.spinnerModel, in: boxSize)
                 .map { (msg: SpinnersDemo.Message) -> Demo.Message in
                     return Demo.Message.spinnerMessage(msg)
                 }
         case .canvas:
             title = "Canvas Demo"
-            demo = canvasProgram
+            demo =
+                canvasProgram
                 .render(model: model.canvasModel, in: boxSize)
                 .map { (msg: CanvasDemo.Message) -> Demo.Message in
                     return Demo.Message.canvasMessage(msg)
                 }
         case .input:
             title = "InputView Demo"
-            demo = inputProgram
+            demo =
+                inputProgram
                 .render(model: model.inputModel, in: boxSize)
                 .map { (msg: InputDemo.Message) -> Demo.Message in
                     return Demo.Message.inputMessage(msg)
                 }
         case .mouse:
             title = "MouseView Demo"
-            demo = mouseProgram
+            demo =
+                mouseProgram
                 .render(model: model.mouseModel, in: boxSize)
                 .map { (msg: MouseDemo.Message) -> Demo.Message in
                     return Demo.Message.mouseMessage(msg)
                 }
         case .flowLayout:
             title = "FlowLayout Demo"
-            demo = flowLayoutProgram
+            demo =
+                flowLayoutProgram
                 .render(model: model.flowLayoutModel, in: boxSize)
                 .map { (msg: FlowLayoutDemo.Message) -> Demo.Message in
                     return Demo.Message.flowLayoutMessage(msg)
                 }
         case .gridLayout:
             title = "GridLayout Demo"
-            demo = gridLayoutProgram
+            demo =
+                gridLayoutProgram
                 .render(model: model.gridLayoutModel, in: boxSize)
                 .map { (msg: GridLayoutDemo.Message) -> Demo.Message in
                     return Demo.Message.gridLayoutMessage(msg)
                 }
         case .httpCommand:
             title = "HttpCommand Demo"
-            demo = httpCommandProgram
+            demo =
+                httpCommandProgram
                 .render(model: model.httpCommandModel, in: boxSize)
                 .map { (msg: HttpCommandDemo.Message) -> Demo.Message in
                     return Demo.Message.httpCommandMessage(msg)
@@ -218,12 +230,15 @@ struct Demo: Program {
         let demoBox = Box(
             at: .topLeft(x: 0, y: labelHeight),
             size: DesiredSize(boxSize),
-            components: [demo])
+            components: [demo]
+        )
 
         components.append(OnMouse({ mouse in return Demo.Message.mouse(mouse) }))
         components.append(demoBox)
         components.append(LabelView(at: .topCenter(y: 0), text: Text(title, [.underline, .bold])))
-        components.append(OnKeyPress({ key in return Demo.Message.keypress(key) }, except: [.ctrl(.k)]))
+        components.append(
+            OnKeyPress({ key in return Demo.Message.keypress(key) }, except: [.ctrl(.k)])
+        )
         components.append(OnKeyPress({ _ in return Demo.Message.resetLog }, only: [.ctrl(.k)]))
         components.append(OnDebug(Message.appendLog))
         components.append(
@@ -233,7 +248,9 @@ struct Demo: Program {
                 border: .single,
                 components: [
                     LogView(at: .topLeft(x: 1, y: 0), entries: model.log)
-                ]))
+                ]
+            )
+        )
 
         return Window(components: components)
     }
