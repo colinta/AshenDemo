@@ -44,7 +44,7 @@ struct HttpCommandDemo: Program {
             return (model, [], .quit)
         case let .received(result):
             model.http = nil
-            model.result = result.map { data, headers in
+            model.result = result.map { statusCode, headers, data in
                 if let str = String(data: data, encoding: .utf8) {
                     return str
                 }

@@ -99,7 +99,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 spinnerProgram.update(model: &model.spinnerModel, message: spinnerMsg)
             model.spinnerModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .canvas
             }
@@ -107,7 +107,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 canvasProgram.update(model: &model.canvasModel, message: canvasMsg)
             model.canvasModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .input
             }
@@ -115,7 +115,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 inputProgram.update(model: &model.inputModel, message: inputMsg)
             model.inputModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .mouse
             }
@@ -123,7 +123,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 mouseProgram.update(model: &model.mouseModel, message: mouseMsg)
             model.mouseModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .flowLayout
             }
@@ -131,7 +131,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 flowLayoutProgram.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
             model.flowLayoutModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .gridLayout
             }
@@ -139,7 +139,7 @@ struct Demo: Program {
             let (newModel, _, state) =
                 gridLayoutProgram.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
             model.gridLayoutModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 model.log = []
                 model.activeDemo = .httpCommand
             }
@@ -147,7 +147,7 @@ struct Demo: Program {
             let (newModel, httpCommandCommands, state) =
                 httpCommandProgram.update(model: &model.httpCommandModel, message: httpCommandMsg)
             model.httpCommandModel = newModel
-            if state == .quit {
+            if case .quit = state {
                 return (model, [], .quit)
             }
             let commands = httpCommandCommands.map { $0.map { Message.httpCommandMessage($0) } }
