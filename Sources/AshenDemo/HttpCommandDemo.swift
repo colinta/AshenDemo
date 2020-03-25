@@ -27,7 +27,7 @@ struct HttpCommandDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .sendRequest:
@@ -39,9 +39,9 @@ struct HttpCommandDemo: Program {
             }
             model.http = cmd
             model.requestSent = true
-            return (model, [cmd], .continue)
+            return .update(model, [cmd])
         case .quit:
-            return (model, [], .quit)
+            return .quit
         case let .received(result):
             model.http = nil
             model.result = result.map { statusCode, headers, data in
@@ -56,7 +56,7 @@ struct HttpCommandDemo: Program {
             }
             model.http = nil
         }
-        return (model, [], .continue)
+        return .model(model)
     }
 
     func render(model: Model, in screenSize: Size) -> Component {

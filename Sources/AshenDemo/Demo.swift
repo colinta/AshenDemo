@@ -82,11 +82,11 @@ struct Demo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .quit:
-            return (model, [], .quit)
+            return .quit
         case let .keypress(key):
             model.log.append("Pressed \(key)")
         case let .mouse(mouse):
@@ -96,65 +96,73 @@ struct Demo: Program {
         case let .appendLog(entry):
             model.log.append(entry)
         case let .spinnerMessage(spinnerMsg):
-            let (newModel, _, state) =
-                spinnerProgram.update(model: &model.spinnerModel, message: spinnerMsg)
-            model.spinnerModel = newModel
-            if case .quit = state {
+            let update = spinnerProgram.update(model: &model.spinnerModel, message: spinnerMsg)
+            if let newModel = update.model {
+                model.spinnerModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .canvas
             }
         case let .canvasMessage(canvasMsg):
-            let (newModel, _, state) =
-                canvasProgram.update(model: &model.canvasModel, message: canvasMsg)
-            model.canvasModel = newModel
-            if case .quit = state {
+            let update = canvasProgram.update(model: &model.canvasModel, message: canvasMsg)
+            if let newModel = update.model {
+                model.canvasModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .input
             }
         case let .inputMessage(inputMsg):
-            let (newModel, _, state) =
-                inputProgram.update(model: &model.inputModel, message: inputMsg)
-            model.inputModel = newModel
-            if case .quit = state {
+            let update = inputProgram.update(model: &model.inputModel, message: inputMsg)
+            if let newModel = update.model {
+                model.inputModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .mouse
             }
         case let .mouseMessage(mouseMsg):
-            let (newModel, _, state) =
-                mouseProgram.update(model: &model.mouseModel, message: mouseMsg)
-            model.mouseModel = newModel
-            if case .quit = state {
+            let update = mouseProgram.update(model: &model.mouseModel, message: mouseMsg)
+            if let newModel = update.model {
+                model.mouseModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .flowLayout
             }
         case let .flowLayoutMessage(flowLayoutMsg):
-            let (newModel, _, state) =
-                flowLayoutProgram.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
-            model.flowLayoutModel = newModel
-            if case .quit = state {
+            let update = flowLayoutProgram.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
+            if let newModel = update.model {
+                model.flowLayoutModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .gridLayout
             }
         case let .gridLayoutMessage(gridLayoutMsg):
-            let (newModel, _, state) =
-                gridLayoutProgram.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
-            model.gridLayoutModel = newModel
-            if case .quit = state {
+            let update = gridLayoutProgram.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
+            if let newModel = update.model {
+                model.gridLayoutModel = newModel
+            }
+            else if case .quit = update {
                 model.log = []
                 model.activeDemo = .httpCommand
             }
         case let .httpCommandMessage(httpCommandMsg):
-            let (newModel, httpCommandCommands, state) =
-                httpCommandProgram.update(model: &model.httpCommandModel, message: httpCommandMsg)
-            model.httpCommandModel = newModel
-            if case .quit = state {
-                return (model, [], .quit)
+            let update = httpCommandProgram.update(model: &model.httpCommandModel, message: httpCommandMsg)
+            if let model = update.model, let commands = update.commands {
+                model.httpCommandModel = newModel
+                (newModel, httpCommandCommands, state)
+                let commands = httpCommandCommands.map { $0.map { Message.httpCommandMessage($0) } }
+                return .update(model, commands)
             }
-            let commands = httpCommandCommands.map { $0.map { Message.httpCommandMessage($0) } }
-            return (model, commands, .continue)
+            else if case .quit = update {
+                return .quit
+            }
         }
 
-        return (model, [], .continue)
+        return .model(model)
     }
 
     func render(model: Model, in screenSize: Size) -> Component {

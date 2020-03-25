@@ -31,7 +31,7 @@ struct InputDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .nextInput:
@@ -50,9 +50,9 @@ struct InputDemo: Program {
                 model.secondInput = text
             }
         case .quit:
-            return (model, [], .quit)
+            return .quit
         }
-        return (model, [], .continue)
+        return .model(model)
     }
 
     func render(model: Model, in screenSize: Size) -> Component {

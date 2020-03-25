@@ -39,7 +39,7 @@ struct SpinnersDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .toggle:
@@ -53,9 +53,9 @@ struct SpinnersDemo: Program {
         case .prevBackgroundColor:
             model.background = prevColor(model.background)
         case .quit:
-            return (model, [], .quit)
+            return .quit
         }
-        return (model, [], .continue)
+        return .model(model)
     }
 
     func render(model: Model, in screenSize: Size) -> Component {

@@ -45,14 +45,14 @@ struct FlowLayoutDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .quit:
-            return (model, [], .quit)
+            return .quit
         case .randomize:
             model = Model()
-            return (model, [], .continue)
+            return .model(model)
         }
     }
 

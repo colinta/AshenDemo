@@ -26,7 +26,7 @@ struct CanvasDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case .tick:
@@ -38,9 +38,9 @@ struct CanvasDemo: Program {
         case .offsetReset:
             model.timeOffset = 0
         case .quit:
-            return (model, [], .quit)
+            return .quit
         }
-        return (model, [], .continue)
+        return .model(model)
     }
 
     private func lpad(_ time: Int, as component: NSCalendar.Unit) -> String {

@@ -23,7 +23,7 @@ struct MouseDemo: Program {
     }
 
     func update(model: inout Model, message: Message)
-        -> (Model, [Command], LoopState)
+        -> Update<Model>
     {
         switch message {
         case let .onMouse(mouse):
@@ -39,9 +39,9 @@ struct MouseDemo: Program {
         case let .setBrush(brush):
             model.brush = brush
         case .quit:
-            return (model, [], .quit)
+            return .quit
         }
-        return (model, [], .continue)
+        return .model(model)
     }
 
     func render(model: Model, in screenSize: Size) -> Component {
