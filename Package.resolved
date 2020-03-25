@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/colinta/Ashen.git",
         "state": {
           "branch": "master",
-          "revision": "3e887e76b8a758ac9220e8ad1752195168eb1154",
+          "revision": "7b6b303af6d583ad9d69a31c833cc16c161d1fcb",
           "version": null
         }
       },
@@ -14,8 +14,8 @@
         "package": "Termbox",
         "repositoryURL": "https://github.com/colinta/Termbox.git",
         "state": {
-          "branch": "c0b4baf",
-          "revision": "c0b4baf778f1213d29558b6c7028312bf99b6e6b",
+          "branch": "master",
+          "revision": "441efc357f3328cc45043b5d17097afd58982094",
           "version": null
         }
       }
