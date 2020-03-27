@@ -14,7 +14,7 @@ struct Demo: Program {
     let mouseProgram = MouseDemo()
     let flowLayoutProgram = FlowLayoutDemo()
     let gridLayoutProgram = GridLayoutDemo()
-    let httpCommandProgram = HttpCommandDemo()
+    let httpProgram = HttpCommandDemo()
 
     enum ActiveDemo {
         case spinner
@@ -23,7 +23,7 @@ struct Demo: Program {
         case mouse
         case flowLayout
         case gridLayout
-        case httpCommand
+        case http
     }
 
     struct Model {
@@ -34,7 +34,7 @@ struct Demo: Program {
         var mouseModel: MouseDemo.ModelType
         var flowLayoutModel: FlowLayoutDemo.ModelType
         var gridLayoutModel: GridLayoutDemo.ModelType
-        var httpCommandModel: HttpCommandDemo.ModelType
+        var httpModel: HttpCommandDemo.ModelType
         var log: [String]
     }
 
@@ -50,7 +50,7 @@ struct Demo: Program {
         case mouseMessage(MouseDemo.Message)
         case flowLayoutMessage(FlowLayoutDemo.Message)
         case gridLayoutMessage(GridLayoutDemo.Message)
-        case httpCommandMessage(HttpCommandDemo.Message)
+        case httpMessage(HttpCommandDemo.Message)
     }
 
     init(demo: ActiveDemo = .spinner) {
@@ -64,7 +64,7 @@ struct Demo: Program {
         let (mouseModel, _) = mouseProgram.initial()
         let (flowLayoutModel, _) = flowLayoutProgram.initial()
         let (gridLayoutModel, _) = gridLayoutProgram.initial()
-        let (httpCommandModel, _) = httpCommandProgram.initial()
+        let (httpModel, _) = httpProgram.initial()
 
         return (
             Model(
@@ -75,7 +75,7 @@ struct Demo: Program {
                 mouseModel: mouseModel,
                 flowLayoutModel: flowLayoutModel,
                 gridLayoutModel: gridLayoutModel,
-                httpCommandModel: httpCommandModel,
+                httpModel: httpModel,
                 log: []
             ), []
         )
@@ -97,7 +97,7 @@ struct Demo: Program {
             model.log.append(entry)
         case let .spinnerMessage(spinnerMsg):
             let update = spinnerProgram.update(model: &model.spinnerModel, message: spinnerMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.spinnerModel = newModel
             }
             else if case .quit = update {
@@ -106,7 +106,7 @@ struct Demo: Program {
             }
         case let .canvasMessage(canvasMsg):
             let update = canvasProgram.update(model: &model.canvasModel, message: canvasMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.canvasModel = newModel
             }
             else if case .quit = update {
@@ -115,7 +115,7 @@ struct Demo: Program {
             }
         case let .inputMessage(inputMsg):
             let update = inputProgram.update(model: &model.inputModel, message: inputMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.inputModel = newModel
             }
             else if case .quit = update {
@@ -124,7 +124,7 @@ struct Demo: Program {
             }
         case let .mouseMessage(mouseMsg):
             let update = mouseProgram.update(model: &model.mouseModel, message: mouseMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.mouseModel = newModel
             }
             else if case .quit = update {
@@ -133,7 +133,7 @@ struct Demo: Program {
             }
         case let .flowLayoutMessage(flowLayoutMsg):
             let update = flowLayoutProgram.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.flowLayoutModel = newModel
             }
             else if case .quit = update {
@@ -142,19 +142,18 @@ struct Demo: Program {
             }
         case let .gridLayoutMessage(gridLayoutMsg):
             let update = gridLayoutProgram.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
-            if let newModel = update.model {
+            if let (newModel, _) = update.values {
                 model.gridLayoutModel = newModel
             }
             else if case .quit = update {
                 model.log = []
-                model.activeDemo = .httpCommand
+                model.activeDemo = .http
             }
-        case let .httpCommandMessage(httpCommandMsg):
-            let update = httpCommandProgram.update(model: &model.httpCommandModel, message: httpCommandMsg)
-            if let model = update.model, let commands = update.commands {
-                model.httpCommandModel = newModel
-                (newModel, httpCommandCommands, state)
-                let commands = httpCommandCommands.map { $0.map { Message.httpCommandMessage($0) } }
+        case let .httpMessage(httpMsg):
+            let update = httpProgram.update(model: &model.httpModel, message: httpMsg)
+            if let (newModel, httpCommands) = update.values {
+                model.httpModel = newModel
+                let commands = httpCommands.map { $0.map { Message.httpMessage($0) } }
                 return .update(model, commands)
             }
             else if case .quit = update {
@@ -225,13 +224,13 @@ struct Demo: Program {
                 .map { (msg: GridLayoutDemo.Message) -> Demo.Message in
                     Demo.Message.gridLayoutMessage(msg)
                 }
-        case .httpCommand:
+        case .http:
             title = "HttpCommand Demo"
             demo =
-                httpCommandProgram
-                .render(model: model.httpCommandModel, in: boxSize)
+                httpProgram
+                .render(model: model.httpModel, in: boxSize)
                 .map { (msg: HttpCommandDemo.Message) -> Demo.Message in
-                    Demo.Message.httpCommandMessage(msg)
+                    Demo.Message.httpMessage(msg)
                 }
         }
 
