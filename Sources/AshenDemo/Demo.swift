@@ -8,13 +8,14 @@ import Ashen
 
 struct Demo: Program {
     let initialDemo: ActiveDemo
-    let spinnerProgram = SpinnersDemo()
-    let canvasProgram = CanvasDemo()
-    let inputProgram = InputDemo()
-    let mouseProgram = MouseDemo()
-    let flowLayoutProgram = FlowLayoutDemo()
-    let gridLayoutProgram = GridLayoutDemo()
-    let httpProgram = HttpCommandDemo()
+    let spinnerDemo = SpinnersDemo()
+    let canvasDemo = CanvasDemo()
+    let inputDemo = InputDemo()
+    let mouseDemo = MouseDemo()
+    let flowLayoutDemo = FlowLayoutDemo()
+    let gridLayoutDemo = GridLayoutDemo()
+    let colorsDemo = ColorsDemo()
+    let httpDemo = HttpCommandDemo()
 
     enum ActiveDemo {
         case spinner
@@ -23,6 +24,7 @@ struct Demo: Program {
         case mouse
         case flowLayout
         case gridLayout
+        case colors
         case http
     }
 
@@ -34,6 +36,7 @@ struct Demo: Program {
         var mouseModel: MouseDemo.ModelType
         var flowLayoutModel: FlowLayoutDemo.ModelType
         var gridLayoutModel: GridLayoutDemo.ModelType
+        var colorsModel: ColorsDemo.ModelType
         var httpModel: HttpCommandDemo.ModelType
         var log: [String]
     }
@@ -50,21 +53,23 @@ struct Demo: Program {
         case mouseMessage(MouseDemo.Message)
         case flowLayoutMessage(FlowLayoutDemo.Message)
         case gridLayoutMessage(GridLayoutDemo.Message)
+        case colorsMessage(ColorsDemo.Message)
         case httpMessage(HttpCommandDemo.Message)
     }
 
-    init(demo: ActiveDemo = .spinner) {
+    init(demo: ActiveDemo = .colors) {
         initialDemo = demo
     }
 
     func initial() -> (Model, [Command]) {
-        let (spinnerModel, _) = spinnerProgram.initial()
-        let (canvasModel, _) = canvasProgram.initial()
-        let (inputModel, _) = inputProgram.initial()
-        let (mouseModel, _) = mouseProgram.initial()
-        let (flowLayoutModel, _) = flowLayoutProgram.initial()
-        let (gridLayoutModel, _) = gridLayoutProgram.initial()
-        let (httpModel, _) = httpProgram.initial()
+        let (spinnerModel, _) = spinnerDemo.initial()
+        let (canvasModel, _) = canvasDemo.initial()
+        let (inputModel, _) = inputDemo.initial()
+        let (mouseModel, _) = mouseDemo.initial()
+        let (flowLayoutModel, _) = flowLayoutDemo.initial()
+        let (gridLayoutModel, _) = gridLayoutDemo.initial()
+        let (colorsModel, _) = colorsDemo.initial()
+        let (httpModel, _) = httpDemo.initial()
 
         return (
             Model(
@@ -75,6 +80,7 @@ struct Demo: Program {
                 mouseModel: mouseModel,
                 flowLayoutModel: flowLayoutModel,
                 gridLayoutModel: gridLayoutModel,
+                colorsModel: colorsModel,
                 httpModel: httpModel,
                 log: []
             ), []
@@ -96,7 +102,7 @@ struct Demo: Program {
         case let .appendLog(entry):
             model.log.append(entry)
         case let .spinnerMessage(spinnerMsg):
-            let update = spinnerProgram.update(model: &model.spinnerModel, message: spinnerMsg)
+            let update = spinnerDemo.update(model: &model.spinnerModel, message: spinnerMsg)
             if let (newModel, _) = update.values {
                 model.spinnerModel = newModel
             }
@@ -105,7 +111,7 @@ struct Demo: Program {
                 model.activeDemo = .canvas
             }
         case let .canvasMessage(canvasMsg):
-            let update = canvasProgram.update(model: &model.canvasModel, message: canvasMsg)
+            let update = canvasDemo.update(model: &model.canvasModel, message: canvasMsg)
             if let (newModel, _) = update.values {
                 model.canvasModel = newModel
             }
@@ -114,7 +120,7 @@ struct Demo: Program {
                 model.activeDemo = .input
             }
         case let .inputMessage(inputMsg):
-            let update = inputProgram.update(model: &model.inputModel, message: inputMsg)
+            let update = inputDemo.update(model: &model.inputModel, message: inputMsg)
             if let (newModel, _) = update.values {
                 model.inputModel = newModel
             }
@@ -123,7 +129,7 @@ struct Demo: Program {
                 model.activeDemo = .mouse
             }
         case let .mouseMessage(mouseMsg):
-            let update = mouseProgram.update(model: &model.mouseModel, message: mouseMsg)
+            let update = mouseDemo.update(model: &model.mouseModel, message: mouseMsg)
             if let (newModel, _) = update.values {
                 model.mouseModel = newModel
             }
@@ -132,7 +138,7 @@ struct Demo: Program {
                 model.activeDemo = .flowLayout
             }
         case let .flowLayoutMessage(flowLayoutMsg):
-            let update = flowLayoutProgram.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
+            let update = flowLayoutDemo.update(model: &model.flowLayoutModel, message: flowLayoutMsg)
             if let (newModel, _) = update.values {
                 model.flowLayoutModel = newModel
             }
@@ -141,16 +147,25 @@ struct Demo: Program {
                 model.activeDemo = .gridLayout
             }
         case let .gridLayoutMessage(gridLayoutMsg):
-            let update = gridLayoutProgram.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
+            let update = gridLayoutDemo.update(model: &model.gridLayoutModel, message: gridLayoutMsg)
             if let (newModel, _) = update.values {
                 model.gridLayoutModel = newModel
+            }
+            else if case .quit = update {
+                model.log = []
+                model.activeDemo = .colors
+            }
+        case let .colorsMessage(colorsMsg):
+            let update = colorsDemo.update(model: &model.colorsModel, message: colorsMsg)
+            if let (newModel, _) = update.values {
+                model.colorsModel = newModel
             }
             else if case .quit = update {
                 model.log = []
                 model.activeDemo = .http
             }
         case let .httpMessage(httpMsg):
-            let update = httpProgram.update(model: &model.httpModel, message: httpMsg)
+            let update = httpDemo.update(model: &model.httpModel, message: httpMsg)
             if let (newModel, httpCommands) = update.values {
                 model.httpModel = newModel
                 let commands = httpCommands.map { $0.map { Message.httpMessage($0) } }
@@ -179,7 +194,7 @@ struct Demo: Program {
         case .spinner:
             title = "SpinnerView Demo"
             demo =
-                spinnerProgram
+                spinnerDemo
                 .render(model: model.spinnerModel, in: boxSize)
                 .map { (msg: SpinnersDemo.Message) -> Demo.Message in
                     Demo.Message.spinnerMessage(msg)
@@ -187,7 +202,7 @@ struct Demo: Program {
         case .canvas:
             title = "Canvas Demo"
             demo =
-                canvasProgram
+                canvasDemo
                 .render(model: model.canvasModel, in: boxSize)
                 .map { (msg: CanvasDemo.Message) -> Demo.Message in
                     Demo.Message.canvasMessage(msg)
@@ -195,7 +210,7 @@ struct Demo: Program {
         case .input:
             title = "InputView Demo"
             demo =
-                inputProgram
+                inputDemo
                 .render(model: model.inputModel, in: boxSize)
                 .map { (msg: InputDemo.Message) -> Demo.Message in
                     Demo.Message.inputMessage(msg)
@@ -203,7 +218,7 @@ struct Demo: Program {
         case .mouse:
             title = "MouseView Demo"
             demo =
-                mouseProgram
+                mouseDemo
                 .render(model: model.mouseModel, in: boxSize)
                 .map { (msg: MouseDemo.Message) -> Demo.Message in
                     Demo.Message.mouseMessage(msg)
@@ -211,7 +226,7 @@ struct Demo: Program {
         case .flowLayout:
             title = "FlowLayout Demo"
             demo =
-                flowLayoutProgram
+                flowLayoutDemo
                 .render(model: model.flowLayoutModel, in: boxSize)
                 .map { (msg: FlowLayoutDemo.Message) -> Demo.Message in
                     Demo.Message.flowLayoutMessage(msg)
@@ -219,15 +234,23 @@ struct Demo: Program {
         case .gridLayout:
             title = "GridLayout Demo"
             demo =
-                gridLayoutProgram
+                gridLayoutDemo
                 .render(model: model.gridLayoutModel, in: boxSize)
                 .map { (msg: GridLayoutDemo.Message) -> Demo.Message in
                     Demo.Message.gridLayoutMessage(msg)
                 }
+        case .colors:
+            title = "Colors Demo"
+            demo =
+                colorsDemo
+                .render(model: model.colorsModel, in: boxSize)
+                .map { (msg: ColorsDemo.Message) -> Demo.Message in
+                    Demo.Message.colorsMessage(msg)
+                }
         case .http:
             title = "HttpCommand Demo"
             demo =
-                httpProgram
+                httpDemo
                 .render(model: model.httpModel, in: boxSize)
                 .map { (msg: HttpCommandDemo.Message) -> Demo.Message in
                     Demo.Message.httpMessage(msg)
