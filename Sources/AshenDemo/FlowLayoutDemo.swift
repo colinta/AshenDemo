@@ -61,6 +61,9 @@ struct FlowLayoutDemo: Program {
             LabelView(text: text)
         }
         return Window(components: [
+            Instructions([
+                "Press <Tab> to randomize the content.",
+            ], screenSize: screenSize),
             LabelView(at: .topLeft(), text: "\(model.orientation)  ---  \(model.direction)"),
             OnKeyPress(.enter, { Message.quit }),
             OnKeyPress(.tab, { Message.randomize }),

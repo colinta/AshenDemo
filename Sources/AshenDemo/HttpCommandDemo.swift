@@ -79,6 +79,10 @@ struct HttpCommandDemo: Program {
 
         return Window(
             components: [
+                Instructions([
+                    "Press ↓↑ to change background colors,",
+                    "and ←→ to change foreground colors.",
+                ], screenSize: screenSize),
                 OnKeyPress(.enter, { Message.quit }),
             ] + [content]
         )

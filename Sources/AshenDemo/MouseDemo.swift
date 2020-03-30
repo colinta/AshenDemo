@@ -58,7 +58,13 @@ struct MouseDemo: Program {
             )
         }
 
+        let canvasY = 4
+        let instructions = Instructions([
+            "Click the patterns at the top to change the brush",
+            "Click and drag to draw.",
+        ], screenSize: screenSize)
         return Window(components: [
+            instructions,
             FlowLayout.horizontal(
                 size: DesiredSize(width: .max, height: buttonSize.height + 1),
                 components: brushButtons
@@ -73,8 +79,8 @@ struct MouseDemo: Program {
                 ]
             ),
             Box(
-                at: .topLeft(x: 0, y: 4),
-                size: DesiredSize(width: screenSize.width, height: screenSize.height),
+                at: .topLeft(x: 0, y: canvasY),
+                size: DesiredSize(width: screenSize.width, height: screenSize.height - canvasY - instructions.linesHeight),
                 border: .single,
                 components: [MouseCanvas(model.drawables, onMouse: Message.onMouse)]
             ),

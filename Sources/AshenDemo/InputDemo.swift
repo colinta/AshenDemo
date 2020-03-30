@@ -24,7 +24,7 @@ struct InputDemo: Program {
         (
             Model(
                 activeInput: 0,
-                firstInput: "Press enter to exit, tab to switch inputs",
+                firstInput: "",
                 secondInput: ""
             ), []
         )
@@ -87,6 +87,12 @@ struct InputDemo: Program {
             secondInput,
             OnKeyPress(.tab, { Message.nextInput }),
             OnKeyPress(.backtab, { Message.prevInput }),
+            Instructions([
+                "Press tab to switch inputs.",
+                "The first input is single line,",
+                "The second input is multiline.",
+                "Try using Shift+Arrow to make selections."
+            ], screenSize: screenSize),
         ])
     }
 }

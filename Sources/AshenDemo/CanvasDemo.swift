@@ -131,6 +131,11 @@ struct CanvasDemo: Program {
             OnKeyPress(.backspace, { Message.offsetReset }),
             OnKeyPress(.enter, { Message.quit }),
             OnKeyPress(.space, { Message.toggleAnimation }),
+            Instructions([
+                "Press ↓↑ to change the time offset,",
+                "Press ⌫ to reset the time offset to your local time zone.",
+                "Press <Space> to animate day and night cycles.",
+            ], screenSize: screenSize),
             OnTick({ _ in Message.tick }, every: 0.1),
             LabelView(
                 at: .topLeft(x: 2),

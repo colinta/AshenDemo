@@ -44,14 +44,16 @@ struct GridLayoutDemo: Program {
         case .quit:
             return .quit
         case .randomize:
-            model = Model()
-            return .model(model)
+            return .model(Model())
         }
     }
 
     func render(model: Model, in screenSize: Size) -> Component {
         let gridSize = Size(width: screenSize.width, height: screenSize.height - 1)
         return Window(components: [
+            Instructions([
+                "Press <Tab> to randomize the content.",
+            ], screenSize: screenSize),
             OnKeyPress(.enter, { Message.quit }),
             OnKeyPress(.tab, { Message.randomize }),
             GridLayout(

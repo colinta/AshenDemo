@@ -99,22 +99,13 @@ struct SpinnersDemo: Program {
                 )
             }
 
-        let line1 = "Press ↓↑ to change background colors,"
-        let line2 = "and ←→ to change foreground colors."
-        let line3 = "Press <Enter> to continue."
-        let instructions: LabelView
-        if screenSize.width > line1.count + line2.count + line3.count {
-            instructions = LabelView(at: .bottom(), text: "\(line1) \(line2) \(line3)")
-        }
-        else if screenSize.width > line1.count + line2.count {
-            instructions = LabelView(at: .bottom(), text: "\(line1) \(line2)\n\(line3)")
-        }
-        else {
-            instructions = LabelView(at: .bottom(), text: "\(line1)\n\(line2)\n\(line3)")
-        }
         return Window(
             components: spinners + [
-                wideSpinner, instructions,
+                wideSpinner,
+                Instructions([
+                    "Press ↓↑ to change background colors,",
+                    "and ←→ to change foreground colors.",
+                ], screenSize: screenSize),
                 FlowLayout(at: .topLeft(y: 1), components: colors),
                 OnKeyPress(.enter, { Message.quit }),
                 OnKeyPress(.space, { Message.toggle }),
