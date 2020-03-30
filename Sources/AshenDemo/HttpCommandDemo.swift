@@ -11,19 +11,21 @@ struct HttpCommandDemo: Program {
 
     enum Message {
         case quit
+        case scroll(Int)
         case sendRequest
         case abort
         case received(Http.HttpResult)
     }
 
     struct Model {
-        var requestSent: Bool
-        var http: Http?
-        var result: Result<String>?
+        var requestSent: Bool = false
+        var http: Http? = nil
+        var result: Result<String>? = nil
+        var offset: Int = 0
     }
 
     func initial() -> (Model, [Command]) {
-        (Model(requestSent: false, http: nil, result: nil), [])
+        (Model(), [])
     }
 
     func update(model: inout Model, message: Message)
@@ -40,6 +42,8 @@ struct HttpCommandDemo: Program {
             model.http = cmd
             model.requestSent = true
             return .update(model, [cmd])
+        case let .scroll(dy):
+            model.offset += dy
         case .quit:
             return .quit
         case let .received(result):
@@ -65,7 +69,14 @@ struct HttpCommandDemo: Program {
 
         let content: Component
         if case let .some(.ok(string)) = model.result {
-            content = LabelView(at: .topLeft(), text: string)
+            content =
+                Box(
+                    components: [
+                        OnKeyPress(.up, { Message.scroll(-1) }),
+                        OnKeyPress(.down, { Message.scroll(1) }),
+                        LabelView(at: .topLeft(), text: string)],
+                    scrollOffset: Point(x: 0, y: model.offset)
+                )
         }
         else if case let .some(.fail(error)) = model.result {
             content = LabelView(at: .topLeft(), text: "\(error)")
