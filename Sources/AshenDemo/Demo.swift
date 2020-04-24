@@ -57,7 +57,7 @@ struct Demo: Program {
         case httpMessage(HttpCommandDemo.Message)
     }
 
-    init(demo: ActiveDemo = .colors) {
+    init(demo: ActiveDemo = .spinner) {
         initialDemo = demo
     }
 
