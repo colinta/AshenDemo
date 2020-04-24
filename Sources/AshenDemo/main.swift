@@ -9,9 +9,9 @@ let args = Swift.CommandLine.arguments
 let cmd: String = (args.count > 1 ? args[1] : "demo")
 
 let app = App(program: Demo(), screen: TermboxScreen())
-let exitState = app.run()
-
-switch exitState {
-case .quit: exit(EX_OK)
-case .error: exit(EX_IOERR)
+do {
+    try app.run()
+    exit(EX_OK)
+} catch {
+    exit(EX_IOERR)
 }

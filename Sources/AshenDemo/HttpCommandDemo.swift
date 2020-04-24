@@ -20,7 +20,7 @@ struct HttpCommandDemo: Program {
     struct Model {
         var requestSent: Bool = false
         var http: Http? = nil
-        var result: Result<String>? = nil
+        var result: Result<String, Error>? = nil
         var offset: Int = 0
     }
 
@@ -48,11 +48,17 @@ struct HttpCommandDemo: Program {
             return .quit
         case let .received(result):
             model.http = nil
-            model.result = result.map { statusCode, headers, data in
+            do {
+                let (_, _, data) = try result.get()
                 if let str = String(data: data, encoding: .utf8) {
-                    return str
+                    model.result = .success(str)
                 }
-                throw Error()
+                else {
+                    throw Error()
+                }
+            }
+            catch {
+                model.result = .failure(Error())
             }
         case .abort:
             if let http = model.http {
@@ -68,7 +74,7 @@ struct HttpCommandDemo: Program {
         else { return OnNext({ Message.sendRequest }) }
 
         let content: Component
-        if case let .some(.ok(string)) = model.result {
+        if case let .some(.success(string)) = model.result {
             content =
                 Box(
                     components: [
@@ -78,7 +84,7 @@ struct HttpCommandDemo: Program {
                     scrollOffset: Point(x: 0, y: model.offset)
                 )
         }
-        else if case let .some(.fail(error)) = model.result {
+        else if case let .some(.failure(error)) = model.result {
             content = LabelView(at: .topLeft(), text: "\(error)")
         }
         else if model.http == nil {
